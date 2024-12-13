@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit/Delete Entry</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+  <!-- Back to Home Button -->
+  <div style="text-align: right;">
+    <a href="/" class="btn secondary">Back to Home</a>
+  </div>
+
+  <h1>Edit/Delete Tax Record</h1>
+
+  <!-- Table for displaying tax records -->
+  <table id="taxTable">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Company</th>
+      <th>Amount</th>
+      <th>Payment Date</th>
+      <th>Status</th>
+      <th>Due Date</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Rows populated dynamically by JavaScript -->
+    </tbody>
+  </table>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal hidden" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-content">
+    <h2 id="editModalLabel">Edit Record</h2>
+    <form id="editForm">
+      <!-- Non-editable fields -->
+      <div class="form-group">
+        <label for="editId">ID:</label>
+        <input type="text" id="editId" disabled>
+      </div>
+      <div class="form-group">
+        <label for="editCompany">Company:</label>
+        <input type="text" id="editCompany" disabled>
+      </div>
+
+      <!-- Editable fields -->
+      <div class="form-group">
+        <label for="editAmount">Amount:</label>
+        <input type="number" id="editAmount" placeholder="Enter amount" required>
+      </div>
+      <div class="form-group">
+        <label for="editPaymentDate">Payment Date:</label>
+        <input type="date" id="editPaymentDate" required>
+      </div>
+      <div class="form-group">
+        <label for="editDueDate">Due Date:</label>
+        <select id="editDueDate" required>
+          <!-- Options populated dynamically -->
+        </select>
+      </div>
+
+      <!-- Form actions -->
+      <div class="form-actions">
+        <button type="submit" class="btn">Save</button>
+        <button type="button" class="btn secondary close-modal" aria-label="Close">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal hidden" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-content">
+    <h2 id="deleteModalLabel">Delete Confirmation</h2>
+    <p id="deleteMessage">Are you sure you want to delete this record?</p>
+    <div class="form-actions">
+      <button id="confirmDelete" class="btn delete">OK</button>
+      <button id="cancelDelete" class="btn secondary close-modal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript File -->
+<script src="/static/edit_delete_entry.js"></script>
+</body>
+</html>

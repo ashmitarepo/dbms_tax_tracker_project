@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Records</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+    <div style="text-align: right;">
+        <a href="/" class="btn secondary">Back to Home</a>
+    </div>
+    <h1>Tax Records</h1>
+    <!-- Button to open modal -->
+    <button id="addNewEntry" class="btn">Add New Entry</button>
+    <!-- Table for displaying payments -->
+    <table id="companyTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Company</th>
+            <th>Amount</th>
+            <th>Payment Date</th>
+            <th>Status</th>
+            <th>Due Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Rows will be dynamically populated -->
+        </tbody>
+    </table>
+
+    <!-- Modal for adding/updating entry -->
+    <div id="entryModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Add New Entry</h2>
+            <form id="entryForm">
+                <div class="form-group">
+                    <label for="company">Company:</label>
+                    <input type="text" id="company" name="company" required placeholder="Enter company name">
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount:</label>
+                    <input type="number" id="amount" name="amount" step="0.01" required placeholder="Enter amount">
+                </div>
+                <div class="form-group">
+                    <label for="payment_date">Payment Date:</label>
+                    <select id="payment_date" name="payment_date" onchange="toggleDatePicker()">
+                        <option value="NA">NA</option>
+                        <option value="pick_date">Pick a Date</option>
+                    </select>
+                    <input
+                            type="date"
+                            id="payment_date_picker"
+                            name="payment_date_picker"
+                            class="hidden"
+                            style="display: none;" />
+                </div>
+                <div class="form-group">
+                    <label for="due_date">Due Date:</label>
+                    <select id="due_date" name="due_date" required>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                <button type="submit" class="btn">Save</button>
+                <button type="button" class="btn secondary close-modal">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleDatePicker() {
+        const paymentDateSelect = document.getElementById("payment_date");
+        const paymentDatePicker = document.getElementById("payment_date_picker");
+
+        if (paymentDateSelect.value === "pick_date") {
+            paymentDatePicker.style.display = "block";
+            paymentDatePicker.required = true;
+        } else {
+            paymentDatePicker.style.display = "none";
+            paymentDatePicker.required = false;
+            paymentDatePicker.value = ""; // Clear the value
+        }
+    }
+</script>
+<script src="/static/new_entry.js"></script>
+</body>
+</html>

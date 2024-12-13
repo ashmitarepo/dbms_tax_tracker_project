@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payments Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+  <!-- Back to Home Button -->
+  <div style="text-align: right;">
+    <a href="/" class="btn secondary">Back to Home</a>
+  </div>
+
+  <!-- Dashboard Heading -->
+  <h1>Payments Dashboard</h1>
+
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <label for="filterDueDate">Filter by Due Date:</label>
+    <select id="filterDueDate">
+      <option value="">Select Due Date</option>
+      <option value="2024-04-15">April 15, 2024</option>
+      <option value="2024-06-15">June 15, 2024</option>
+      <option value="2024-09-15">September 15, 2024</option>
+      <option value="2025-01-15">January 15, 2025</option>
+    </select>
+    <button id="resetButton" class="btn secondary">Reset</button>
+  </div>
+
+  <!-- Payments Table -->
+  <table id="paymentsTable">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Company</th>
+      <th>Amount</th>
+      <th>Payment Date</th>
+      <th>Status</th>
+      <th>Due Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Rows will be dynamically populated -->
+    </tbody>
+  </table>
+
+  <!-- Calculations Section -->
+  <div id="calculations" class="calculations">
+    <p><strong>Total Amount:</strong> <span id="totalAmount">$0.00</span></p>
+    <p><strong>Tax Rate:</strong> <span id="taxRate">6%</span></p>
+    <p><strong>Tax Due:</strong> <span id="taxDue">$0.00</span></p>
+  </div>
+</div>
+
+<!-- JavaScript File -->
+<script src="/static/filter_payments.js"></script>
+</body>
+</html>
