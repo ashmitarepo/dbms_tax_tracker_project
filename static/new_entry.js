@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     };
 
- /**
+    /**
      * Fetches records from the database and populates the table without any frontend processing.
      */
     const fetchRecords = async () => {
@@ -80,7 +80,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = Object.fromEntries(formData.entries());
 
         if (!data.due_date) {
-            alert("Please select a valid Due Date.");
+            // Custom error message in an alert
+            alert("Due Date is mandatory. Please enter a valid value.");
             return;
         }
 

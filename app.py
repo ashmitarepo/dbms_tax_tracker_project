@@ -2,22 +2,14 @@ from flask import Flask, render_template, request, jsonify
 import os
 import sqlite3
 from flask_cors import CORS
+from database import get_db_connection, create_tables  # Importing from database.py
 
 app = Flask(__name__)
 CORS(app)
 
-DATABASE = 'tax_tracker.db'
 
-
-# Database Connection
-def get_db_connection():
-    print(f"Connecting to database: {DATABASE}")
-    full_path = os.path.abspath(DATABASE)
-    print("Database full path:", full_path)  # Debugging
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
-
+# Initialize the database on application start.Run table creation logic when the app starts
+create_tables()
 
 # Serve Frontend
 @app.route('/')
@@ -64,15 +56,21 @@ def insert_record():
 # Get all records
 @app.route('/api/records', methods=['GET'])
 def get_records():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM payments")
-    records = cursor.fetchall()
-    conn.close()
-    return jsonify([dict(row) for row in records])
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM payments")
+        records = cursor.fetchall()  # Fetch all rows
 
+        # Convert each row to a dictionary manually
+        result = [dict(zip([column[0] for column in cursor.description], row)) for row in records]
 
-# Get a specific record by ID
+        conn.close()
+        return jsonify(result), 200
+    except Exception as e:
+        print("Error occurred while fetching records:", str(e))
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/records/<int:id>', methods=['GET'])
 def get_record(id):
     try:
@@ -81,13 +79,42 @@ def get_record(id):
         cursor.execute("SELECT * FROM payments WHERE id = ?", (id,))
         record = cursor.fetchone()
         conn.close()
+
         if record:
-            return jsonify(dict(record)), 200
+            # Convert the tuple to a dictionary by mapping column names to their values
+            columns = [col[0] for col in cursor.description]
+            record_dict = dict(zip(columns, record))
+            return jsonify(record_dict), 200
+
         return jsonify({"error": "Record not found"}), 404
     except Exception as e:
         print("Error occurred:", str(e))
         return jsonify({"error": str(e)}), 500
 
+
+# Get all payments or filter by due date
+@app.route('/api/payments', methods=['GET'])
+def get_payments():
+    due_date = request.args.get('due_date')
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        if due_date:
+            cursor.execute('SELECT * FROM payments WHERE due_date = ?', (due_date,))
+        else:
+            cursor.execute('SELECT * FROM payments')
+
+        payments = cursor.fetchall()  # Fetch all rows
+
+        # Convert each row to a dictionary
+        result = [dict(zip([column[0] for column in cursor.description], row)) for row in payments]
+
+        conn.close()
+        return jsonify(result), 200
+    except Exception as e:
+        print("Error occurred while fetching payments:", str(e))
+        return jsonify({"error": str(e)}), 500
 
 # Update a record
 @app.route('/api/records/<int:id>', methods=['PUT'])
@@ -125,19 +152,6 @@ def delete_record(id):
         return jsonify({"message": "Record deleted successfully."}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-# Get all payments or filter by due date
-@app.route('/api/payments', methods=['GET'])
-def get_payments():
-    due_date = request.args.get('due_date')
-    conn = get_db_connection()
-    if due_date:
-        payments = conn.execute('SELECT * FROM payments WHERE due_date = ?', (due_date,)).fetchall()
-    else:
-        payments = conn.execute('SELECT * FROM payments').fetchall()
-    conn.close()
-    return jsonify([dict(payment) for payment in payments])
 
 
 # Run the application
